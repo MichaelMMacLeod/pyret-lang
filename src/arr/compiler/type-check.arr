@@ -165,6 +165,12 @@ end
 
 # I believe modules is always of type SD.MutableStringDict<Loadable> -Matt
 fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-compile-env :: C.ComputedEnvironment, modules) -> C.CompileResult<A.Program>:
+  spy "type-check(program, compile-env, post-compile-env, modules)":
+    program,
+    compile-env,
+    post-compile-env,
+    modules
+  end
   context = TCS.empty-context()
   globvs = compile-env.globals.values
   globts = compile-env.globals.types
