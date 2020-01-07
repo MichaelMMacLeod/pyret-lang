@@ -174,6 +174,7 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
   context = TCS.empty-context()
   globvs = compile-env.globals.values
   globts = compile-env.globals.types
+  spy "context #1": context end
   shadow context = globvs.fold-keys(lam(g, shadow context):
       if context.global-types.has-key(A.s-global(g).key()):
         context
@@ -188,6 +189,7 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
         end
       end
     end, context)
+  spy "context #2": context end
   shadow context = globts.fold-keys(lam(g, shadow context):
       if context.aliases.has-key(A.s-type-global(g).key()):
         context
@@ -213,6 +215,7 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
         end
       end
     end, context)
+  spy "context #3": context end
   shadow context = modules.fold-keys-now(lam(k, shadow context):
       if context.modules.has-key(k):
         context
@@ -239,7 +242,8 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
           end, context)
       end
     end, context)
-  
+  spy "context #4": context end
+
   cases(A.Program) program block:
     | s-program(l, _provide, provided-types, provides, imports, body) =>
       
