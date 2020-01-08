@@ -339,6 +339,12 @@ fun checking(e, expect-typ, top-level, context) block:
 end
 
 fun _checking(e :: Expr, expect-type :: Type, top-level :: Boolean, context :: Context) -> TypingResult:
+  spy "_checking(e, expect-typ, top-level, context)":
+    e,
+    expect-type,
+    top-level,
+    context
+  end
   shadow context = context.add-level()
   shadow expect-type = resolve-alias(expect-type, context)
   cases(Type) expect-type:
@@ -669,6 +675,11 @@ fun synthesis(e, top-level, context) block:
 end
 
 fun _synthesis(e :: Expr, top-level :: Boolean, context :: Context) -> TypingResult:
+  spy "_synthesis(e, top-level, context)":
+    e,
+    top-level,
+    context
+  end
   shadow context = context.add-level()
   cases(Expr) e:
     | s-module(l, answer, defined-modules, defined-values, defined-types, checks) =>
