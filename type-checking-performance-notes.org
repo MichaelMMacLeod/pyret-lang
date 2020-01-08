@@ -1,0 +1,121 @@
+* Increasing number of assignments (:=)
+** Test Programs
+*** 0 Assignments
+    #+BEGIN_SRC pyret
+    import global as g
+    var x = 0
+    #+END_SRC
+**** 6 calls to _synthesis
+**** 4 calls to _checking
+*** 1 Assignment
+    #+BEGIN_SRC pyret
+    import global as g
+    var x = 0
+    x := 1
+    #+END_SRC
+**** 7 calls to _synthesis (+1)
+**** 5 calls to _checking (+1)
+*** 2 Assignments
+    #+BEGIN_SRC pyret
+    import global as g
+    var x = 0
+    x := 1
+    x := 2
+    #+END_SRC
+**** 12 calls to _synthesis (+5)
+**** 8 calls to _checking (+3)
+*** 3 Assignments
+    #+BEGIN_SRC pyret
+    import global as g
+    var x = 0
+    x := 1
+    x := 2
+    x := 3
+    #+END_SRC
+**** 16 calls to _synthesis (+4)
+**** 11 calls to _checking (+3)
+*** 4 Assignments
+    #+BEGIN_SRC pyret
+    import global as g
+    var x = 0
+    x := 1
+    x := 2
+    x := 3
+    x := 4
+    #+END_SRC
+**** 20 calls to _synthesis (+4)
+**** 14 calls to _checking (+3)
+*** 5 Assignments
+    #+BEGIN_SRC pyret
+    import global as g
+    var x = 0
+    x := 1
+    x := 2
+    x := 3
+    x := 4
+    x := 5
+    #+END_SRC
+**** 24 calls to _synthesis (+4)
+**** 17 calls to _checking (+3)
+** Results
+   An extra assignment yields 4 more calls to _synthesis, and 3 more calls to _checking.
+** Explanation
+   The following is a trace of the all calls to _synthesis regarding a single line of code, namely
+   #+BEGIN_SRC pyret
+   x := 5
+   #+END_SRC
+
+   #+BEGIN_SRC pyret
+   s-module(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+            s-prim-app(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+                       "trace-value", 
+                       [list: s-srcloc(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+                                       srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63)),
+                              s-assign(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+                                       s-atom("x", 2),
+                                       s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63),
+                                             5))],
+                       prim-app-info-c(true)),
+            [list: s-defined-module("g", s-atom("g", 1), "builtin://global")],
+                   [list: s-defined-var("x", 
+                                        s-atom("x", 2), 
+                                        srcloc("file:///projects/program.arr", 2, 0, 19, 2, 9, 28))],
+                   [list: ],
+                   s-app(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+                         s-dot(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+                               s-prim-app(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+                                          "current-checker", 
+                                          [list: ], 
+                                          prim-app-info-c(false)), 
+                               "results"),
+                         [list: ]))
+   #+END_SRC
+   
+   #+BEGIN_SRC pyret
+   s-prim-app(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63), 
+              "trace-value", 
+              [list: s-srcloc(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63), 
+                              srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63)),
+                     s-assign(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+                              s-atom("x", 2), 
+                              s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63), 
+                                    5))],
+              prim-app-info-c(true))
+   #+END_SRC
+
+   #+BEGIN_SRC pyret
+   s-assign(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+            s-atom("x", 2),
+            s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63),
+                  5))
+   #+END_SRC
+
+   #+BEGIN_SRC pyret
+   s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63),
+         5)
+   #+END_SRC
+
+   #+BEGIN_SRC pyret
+   s-srcloc(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+            srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63))
+   #+END_SRC
