@@ -292,6 +292,7 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
         end
       
       shadow context = typing-context(new-global-types, new-aliases, context.data-types, context.modules, new-module-names, context.binds, context.constraints, context.info, context.misc)
+      spy "context #5": context end
       
       # print("\n\n")
       # each(lam(x) block:
