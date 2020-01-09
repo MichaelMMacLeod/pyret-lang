@@ -60,62 +60,133 @@
 ** Results
    An extra assignment yields 4 more calls to _synthesis, and 3 more calls to _checking.
 ** Explanation
-   The following is a trace of the all calls to _synthesis regarding a single line of code, namely
    #+BEGIN_SRC pyret
-   x := 5
-   #+END_SRC
-
-   #+BEGIN_SRC pyret
-   s-module(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
-            s-prim-app(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
-                       "trace-value", 
-                       [list: s-srcloc(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
-                                       srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63)),
-                              s-assign(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
-                                       s-atom("x", 2),
-                                       s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63),
-                                             5))],
-                       prim-app-info-c(true)),
-            [list: s-defined-module("g", s-atom("g", 1), "builtin://global")],
-                   [list: s-defined-var("x", 
-                                        s-atom("x", 2), 
-                                        srcloc("file:///projects/program.arr", 2, 0, 19, 2, 9, 28))],
-                   [list: ],
-                   s-app(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
-                         s-dot(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
-                               s-prim-app(srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
-                                          "current-checker", 
-                                          [list: ], 
-                                          prim-app-info-c(false)), 
-                               "results"),
-                         [list: ]))
-   #+END_SRC
-   
-   #+BEGIN_SRC pyret
-   s-prim-app(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63), 
-              "trace-value", 
-              [list: s-srcloc(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63), 
-                              srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63)),
-                     s-assign(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
-                              s-atom("x", 2), 
-                              s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63), 
-                                    5))],
-              prim-app-info-c(true))
-   #+END_SRC
-
-   #+BEGIN_SRC pyret
-   s-assign(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
-            s-atom("x", 2),
-            s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63),
-                  5))
-   #+END_SRC
-
-   #+BEGIN_SRC pyret
-   s-num(srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63),
-         5)
-   #+END_SRC
-
-   #+BEGIN_SRC pyret
-   s-srcloc(srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
-            srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63))
-   #+END_SRC
+   s-program(
+     srcloc("file:///projects/program.arr", 1, 0, 0, 7, 6, 63), 
+     s-provide-none(srcloc("file:///projects/program.arr", 1, 0, 0, 7, 6, 63)),
+     s-provide-types-none(srcloc("file:///projects/program.arr", 1, 0, 0, 7, 6, 63)),
+     [list: 
+       s-provide-block(
+         srcloc("file:///projects/program.arr", 1, 0, 0, 7, 6, 63),
+         [list: ], 
+         [list: ])],
+     [list: 
+       s-import(
+         srcloc("file:///projects/program.arr", 1, 0, 0, 1, 18, 18),
+         s-const-import(
+           srcloc("file:///projects/program.arr", 1, 7, 7, 1, 13, 13),
+           "global"),
+         s-atom("g", 1))],
+     s-let-expr(
+       srcloc("file:///projects/program.arr", 2, 0, 19, 2, 9, 28),
+       [list: 
+         s-var-bind(
+           srcloc("file:///projects/program.arr", 2, 0, 19, 2, 9, 28),
+           s-bind(
+             srcloc("file:///projects/program.arr", 2, 0, 19, 2, 9, 28),
+             false,
+             s-atom("x", 2),
+             a-blank),
+           s-num(
+             srcloc("file:///projects/program.arr", 2, 8, 27, 2, 9, 28),
+             0))],
+       s-block(
+         srcloc("file:///projects/program.arr", 3, 0, 29, 3, 6, 35),
+         [list: 
+           s-prim-app(
+             srcloc("file:///projects/program.arr", 3, 0, 29, 3, 6, 35),
+             "trace-value", 
+             [list: 
+               s-srcloc(
+                 srcloc("file:///projects/program.arr", 3, 0, 29, 3, 6, 35),
+                 srcloc("file:///projects/program.arr", 3, 0, 29, 3, 6, 35)),
+               s-assign(
+                 srcloc("file:///projects/program.arr", 3, 0, 29, 3, 6, 35),
+                 s-atom("x", 2),
+                 s-num(
+                   srcloc("file:///projects/program.arr", 3, 5, 34, 3, 6, 35),
+                   1))],
+             prim-app-info-c(true)),
+           s-prim-app(
+             srcloc("file:///projects/program.arr", 4, 0, 36, 4, 6, 42),
+             "trace-value",
+             [list: 
+               s-srcloc(
+                 srcloc("file:///projects/program.arr", 4, 0, 36, 4, 6, 42),
+                 srcloc("file:///projects/program.arr", 4, 0, 36, 4, 6, 42)),
+               s-assign(
+                 srcloc("file:///projects/program.arr", 4, 0, 36, 4, 6, 42),
+                 s-atom("x", 2),
+                 s-num(
+                   srcloc("file:///projects/program.arr", 4, 5, 41, 4, 6, 42),
+                   2))],
+             prim-app-info-c(true)),
+           s-prim-app(
+             srcloc("file:///projects/program.arr", 5, 0, 43, 5, 6, 49),
+             "trace-value", 
+             [list: 
+               s-srcloc(
+                 srcloc("file:///projects/program.arr", 5, 0, 43, 5, 6, 49),
+                 srcloc("file:///projects/program.arr", 5, 0, 43, 5, 6, 49)),
+               s-assign(
+                 srcloc("file:///projects/program.arr", 5, 0, 43, 5, 6, 49),
+                 s-atom("x", 2), 
+                 s-num(
+                   srcloc("file:///projects/program.arr", 5, 5, 48, 5, 6, 49),
+                   3))],
+             prim-app-info-c(true)),
+           s-prim-app(
+             srcloc("file:///projects/program.arr", 6, 0, 50, 6, 6, 56),
+             "trace-value", 
+             [list: 
+               s-srcloc(
+                 srcloc("file:///projects/program.arr", 6, 0, 50, 6, 6, 56),
+                 srcloc("file:///projects/program.arr", 6, 0, 50, 6, 6, 56)),
+               s-assign(
+                 srcloc("file:///projects/program.arr", 6, 0, 50, 6, 6, 56),
+                 s-atom("x", 2),
+                 s-num(
+                   srcloc("file:///projects/program.arr", 6, 5, 55, 6, 6, 56),
+                   4))],
+             prim-app-info-c(true)),
+           s-module(
+             srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+             s-prim-app(
+               srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+               "trace-value", 
+               [list: 
+                 s-srcloc(
+                   srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+                   srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63)),
+                 s-assign(
+                   srcloc("file:///projects/program.arr", 7, 0, 57, 7, 6, 63),
+                   s-atom("x", 2),
+                   s-num(
+                     srcloc("file:///projects/program.arr", 7, 5, 62, 7, 6, 63),
+                     5))],
+               prim-app-info-c(true)),
+             [list: 
+               s-defined-module(
+                 "g", 
+                 s-atom("g", 1),
+                 "builtin://global")],
+             [list: 
+               s-defined-var(
+                 "x", 
+                 s-atom("x", 2),
+                 srcloc("file:///projects/program.arr", 2, 0, 19, 2, 9, 28))],
+             [list: ],
+             s-app(
+               srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+               s-dot(
+                 srcloc("file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+                 s-prim-app(
+                   srcloc(
+                     "file:///projects/program.arr", 2, 0, 19, 7, 6, 63),
+                     "current-checker", 
+                     [list: ], 
+                     prim-app-info-c(false)),
+                 "results"),
+               [list: ]))]),
+       false))
+   #+END_SRC pyret
