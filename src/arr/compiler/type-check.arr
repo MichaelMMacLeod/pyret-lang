@@ -1005,6 +1005,13 @@ fun _synthesis(e :: Expr, top-level :: Boolean, context :: Context) -> TypingRes
 end
 
 fun synthesis-spine(fun-type :: Type, recreate :: (List<Expr> -> Expr), args :: List<Expr>, app-loc :: Loc, context :: Context) -> TypingResult:
+  spy "synthesis-spine(fun-type :: Type, recreate :: (List<Expr> -> Expr), args :: List<Expr>, app-loc :: Loc, context :: Context)":
+    fun-type,
+    recreate,
+    args,
+    app-loc,
+    context
+  end
   shadow context = context.add-level()
   instantiate-forall(fun-type, context).typing-bind(lam(shadow fun-type, shadow context):
       cases(Type) fun-type:
@@ -1058,6 +1065,12 @@ fun synthesis-spine(fun-type :: Type, recreate :: (List<Expr> -> Expr), args :: 
 end
 
 fun check-synthesis(e :: Expr, expect-type :: Type, top-level :: Boolean, context :: Context) -> TypingResult:
+  spy "check-synthesis(e :: Expr, expect-type :: Type, top-level :: Boolean, context :: Context)":
+    e,
+    expect-type,
+    top-level,
+    context
+  end
   synthesis(e, top-level, context).bind(lam(new-expr, new-type, shadow context):
       # TODO(MATT): decide whether this should return new-type or expect-type
       typing-result(new-expr, new-type, context.add-constraint(new-type, expect-type))
@@ -1081,6 +1094,11 @@ end
 # Use the context returned from this function
 fun handle-datatype(data-type-bind :: A.LetrecBind, bindings :: List<A.LetrecBind>,
     context :: Context) -> FoldResult<List<A.LetrecBind>>:
+  spy "handle-datatype(data-type-bind :: A.LetrecBind, bindings :: List<A.LetrecBind>, context :: Context)":
+    data-type-bind,
+    bindings,
+    context
+  end
   data-expr = data-type-bind.value
   cases(Expr) data-expr:
     | s-data-expr(l, name, namet, params, mixins, variants, fields, _check-loc, _check) =>
@@ -1161,6 +1179,13 @@ end
 
 # Checks with-members on a variant
 fun check-variant(variant :: A.Variant, variant-type :: TS.TypeVariant, data-type :: Type, t-vars :: List<Type>, context :: Context) -> FoldResult<TypeVariant>:
+  spy "check-variant(variant :: A.Variant, variant-type :: TS.TypeVariant, data-type :: Type, t-vars :: List<Type>, context :: Context)":
+    variant,
+    variant-type,
+    data-type,
+    t-vars,
+    context
+  end
   refined-type = t-data-refinement(if is-empty(t-vars): data-type else: t-app(data-type, t-vars, data-type.l, false) end, variant.name, data-type.l, false)
   
   foldr-fold-result(lam(member, shadow context, member-types):
