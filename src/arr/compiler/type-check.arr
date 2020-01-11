@@ -165,8 +165,9 @@ end
 
 # I believe modules is always of type SD.MutableStringDict<Loadable> -Matt
 fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-compile-env :: C.ComputedEnvironment, modules) -> C.CompileResult<A.Program>:
+  program-str = program.tosource()
   spy "type-check(program, compile-env, post-compile-env, modules)":
-    program,
+    program-str,
     compile-env,
     post-compile-env,
     modules
@@ -174,7 +175,6 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
   context = TCS.empty-context()
   globvs = compile-env.globals.values
   globts = compile-env.globals.types
-  spy "context #1": context end
   shadow context = globvs.fold-keys(lam(g, shadow context):
       if context.global-types.has-key(A.s-global(g).key()):
         context
@@ -189,7 +189,6 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
         end
       end
     end, context)
-  spy "context #2": context end
   shadow context = globts.fold-keys(lam(g, shadow context):
       if context.aliases.has-key(A.s-type-global(g).key()):
         context
@@ -215,7 +214,6 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
         end
       end
     end, context)
-  spy "context #3": context end
   shadow context = modules.fold-keys-now(lam(k, shadow context):
       if context.modules.has-key(k):
         context
@@ -242,7 +240,6 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
           end, context)
       end
     end, context)
-  spy "context #4": context end
 
   cases(A.Program) program block:
     | s-program(l, _provide, provided-types, provides, imports, body) =>
@@ -292,7 +289,6 @@ fun type-check(program :: A.Program, compile-env :: C.CompileEnvironment, post-c
         end
       
       shadow context = typing-context(new-global-types, new-aliases, context.data-types, context.modules, new-module-names, context.binds, context.constraints, context.info, context.misc)
-      spy "context #5": context end
       
       # print("\n\n")
       # each(lam(x) block:
@@ -339,8 +335,9 @@ fun checking(e, expect-typ, top-level, context) block:
 end
 
 fun _checking(e :: Expr, expect-type :: Type, top-level :: Boolean, context :: Context) -> TypingResult:
+  e-str = e.tosource()
   spy "_checking(e, expect-typ, top-level, context)":
-    e,
+    e-str,
     expect-type,
     top-level,
     context

@@ -215,40 +215,53 @@ data ConstraintSolution:
   | constraint-solution(variables :: Set<Type>, substitutions :: StringDict<{Type; Type}>) # existential => {assigned-type; existential}
 sharing:
   method apply(self, typ :: Type) -> Type:
+    typ-str = typ.to-string()
+    spy "ConstraintSolution::apply(self, typ :: Type)":
+      self,
+      typ,
+      typ-str
+    end
     app = lam(x): self.apply(x) end
     cases(ConstraintSolution) self:
       | constraint-solution(_, substitutions) =>
-        cases(Type) typ:
-          | t-name(_, _, _, _) =>
+        if substitutions.count() == 0:
+          spy "substitutions.count() == 0; returning typ now":
             typ
-          | t-arrow(args, ret, l, inferred) =>
-            t-arrow(args.map(app), app(ret), l, inferred)
-          | t-app(onto, args, l, inferred) =>
-            t-app(app(onto), args.map(app), l, inferred)
-          | t-top(_, _) =>
-            typ
-          | t-bot(_, _) =>
-            typ
-          | t-record(fields, l, inferred) =>
-            map-app = lam(xs): TS.type-member-map(xs, lam(_, x): app(x) end) end
-            t-record(map-app(fields), l, inferred)
-          | t-tuple(elts, l, inferred) =>
-            t-tuple(elts.map(app), l, inferred)
-          | t-forall(introduces, onto, l, inferred) =>
-            t-forall(introduces, app(onto), l, inferred)
-          | t-ref(ref-typ, l, inferred) =>
-            t-ref(app(ref-typ), l, inferred)
-          | t-data-refinement(data-type, variant-name, l, inferred) =>
-            t-data-refinement(app(data-type), variant-name, l, inferred)
-          | t-var(_, _, _) =>
-            typ
-          | t-existential(_, l, inferred) =>
-            cases(Option<{Type; Type}>) substitutions.get(typ.key()):
-              | none =>
-                typ
-              | some({assigned-type; exists}) =>
-                app(assigned-type.set-loc(l).set-inferred(inferred or assigned-type.inferred))
-            end
+          end
+          typ
+        else:
+          cases(Type) typ:
+            | t-name(_, _, _, _) =>
+              typ
+            | t-arrow(args, ret, l, inferred) =>
+              t-arrow(args.map(app), app(ret), l, inferred)
+            | t-app(onto, args, l, inferred) =>
+              t-app(app(onto), args.map(app), l, inferred)
+            | t-top(_, _) =>
+              typ
+            | t-bot(_, _) =>
+              typ
+            | t-record(fields, l, inferred) =>
+              map-app = lam(xs): TS.type-member-map(xs, lam(_, x): app(x) end) end
+              t-record(map-app(fields), l, inferred)
+            | t-tuple(elts, l, inferred) =>
+              t-tuple(elts.map(app), l, inferred)
+            | t-forall(introduces, onto, l, inferred) =>
+              t-forall(introduces, app(onto), l, inferred)
+            | t-ref(ref-typ, l, inferred) =>
+              t-ref(app(ref-typ), l, inferred)
+            | t-data-refinement(data-type, variant-name, l, inferred) =>
+              t-data-refinement(app(data-type), variant-name, l, inferred)
+            | t-var(_, _, _) =>
+              typ
+            | t-existential(_, l, inferred) =>
+              cases(Option<{Type; Type}>) substitutions.get(typ.key()):
+                | none =>
+                  typ
+                | some({assigned-type; exists}) =>
+                  app(assigned-type.set-loc(l).set-inferred(inferred or assigned-type.inferred))
+              end
+          end
         end
     end
   end,
