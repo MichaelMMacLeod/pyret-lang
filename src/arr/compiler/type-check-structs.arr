@@ -215,7 +215,7 @@ data ConstraintSolution:
   | constraint-solution(variables :: Set<Type>, substitutions :: StringDict<{Type; Type}>) # existential => {assigned-type; existential}
 sharing:
   method apply(self, typ :: Type) -> Type:
-    typ-str = typ.to-string()
+    #typ-str = typ.to-string()
     #spy "ConstraintSolution::apply(self, typ :: Type)":
     #  self,
     #  typ,
