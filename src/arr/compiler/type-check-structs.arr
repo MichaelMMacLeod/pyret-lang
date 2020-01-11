@@ -216,18 +216,18 @@ data ConstraintSolution:
 sharing:
   method apply(self, typ :: Type) -> Type:
     typ-str = typ.to-string()
-    spy "ConstraintSolution::apply(self, typ :: Type)":
-      self,
-      typ,
-      typ-str
-    end
+    #spy "ConstraintSolution::apply(self, typ :: Type)":
+    #  self,
+    #  typ,
+    #  typ-str
+    #end
     app = lam(x): self.apply(x) end
     cases(ConstraintSolution) self:
       | constraint-solution(_, substitutions) =>
         if substitutions.count() == 0:
-          spy "substitutions.count() == 0; returning typ now":
-            typ
-          end
+          #spy "substitutions.count() == 0; returning typ now":
+          #  typ
+          #end
           typ
         else:
           cases(Type) typ:
