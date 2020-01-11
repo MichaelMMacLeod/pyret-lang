@@ -224,7 +224,7 @@ sharing:
     app = lam(x): self.apply(x) end
     cases(ConstraintSolution) self:
       | constraint-solution(_, substitutions) =>
-        if substitutions.count() == 0:
+        if substitutions == [string-dict: ]:
           #spy "substitutions.count() == 0; returning typ now":
           #  typ
           #end
