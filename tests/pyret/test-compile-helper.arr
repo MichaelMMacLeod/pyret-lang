@@ -57,8 +57,13 @@ fun run-to-result-named(program, name):
 end
 
 fun run-to-result-typed(loc, base-path):
-  res = CL.compile-and-run-locator(loc, CLI.module-finder, make-base-path-context(base-path), L.empty-realm(), R.make-runtime(), [SD.mutable-string-dict:], CS.default-compile-options.{compile-module: true, type-check: true})
-  res
+  block:
+    start-time = time-now()
+    res = CL.compile-and-run-locator(loc, CLI.module-finder, make-base-path-context(base-path), L.empty-realm(), R.make-runtime(), [SD.mutable-string-dict:], CS.default-compile-options.{compile-module: true, type-check: true})
+    end-time = time-now()
+    print("\nCompile Time <" + base-path + loc.name() + ">: " + num-to-string(end-time - start-time) + "\n")
+    res
+  end
 end
 
 fun make-base-path-context(base-path):
