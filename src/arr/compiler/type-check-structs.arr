@@ -485,7 +485,11 @@ sharing:
   method solve-level(self, context :: Context) -> FoldResult<{ConstraintSystem; ConstraintSolution}>:
     cases(ConstraintSystem) self:
       | no-constraints =>
-        fold-result({self; constraint-solution(empty-tree-set, [string-dict: ])}, context)
+        the-sol-1 = constraint-solution(empty-tree-set, [string-dict: ])
+        spy "solve-level #1":
+          the-sol-1
+        end
+        fold-result({self; the-sol}, context)
       | constraint-system(variables, constraints, refinement-constraints, field-constraints, example-types, next-system) =>
         # introduce a half level so any constraints depending on test inference can be solved after test inference
         shadow next-system = next-system.add-level()
@@ -494,16 +498,28 @@ sharing:
             {variables.remove(existential); next-system.add-variable(existential)}
           end, {variables; next-system})
         system = constraint-system(variables, constraints, refinement-constraints, field-constraints, example-types, next-system)
-        system.solve-level-helper(constraint-solution(empty-tree-set, [string-dict: ]), context).bind(lam({shadow system; solution}, shadow context):
+        the-sol-2 = constraint-solution(empty-tree-set, [string-dict: ])
+        spy "solve-level #2":
+          the-sol-2
+        end
+        system.solve-level-helper(, context).bind(lam({shadow system; solution}, shadow context):
             # This is solving the level introduced above
             shadow system = system.next-system.add-variable-set(system.variables)
             system.solve-level-helper(solution, context).bind(lam({shadow system; shadow solution}, shadow context):
-                shadow solution = constraint-solution(variables, solution.substitutions)
+                the-sol-3 = constraint-solution(variables, solution.substitutions)
+                spy "solve-level #3":
+                  the-sol-3
+                end
+                shadow solution = the-sol-3
                 cases(ConstraintSystem) system:
                   | no-constraints =>
                     fold-result({system; solution}, context)
                   | constraint-system(shadow variables, _, _, _, _, shadow next-system) =>
-                    shadow solution = constraint-solution(variables, solution.substitutions)
+                    the-sol-4 = constraint-solution(variables, solution.substitutions)
+                    spy "solve-level #4":
+                      the-sol-4
+                    end
+                    shadow solution = the-sol-4
                     shadow next-system = if is-constraint-system(next-system):
                       next-system.add-variable-set(variables)
                     else:
@@ -549,8 +565,12 @@ fun add-substitution(new-type :: Type, type-var :: Type, system :: ConstraintSys
   refinement-constraints = substitute-in-constraints(new-type, type-var, system.refinement-constraints)
   field-constraints = substitute-in-field-constraints(new-type, type-var, system.field-constraints)
   example-types = substitute-in-example-types(new-type, type-var, system.example-types)
-  
-  {solution: constraint-solution(empty-tree-set, substitutions), system: constraint-system(system.variables, constraints, refinement-constraints, field-constraints, example-types, system.next-system)}
+
+  the-sol-1 = constraint-solution(empty-tree-set, substitutions)
+  spy "add-substitution #1":
+    the-sol-1
+  end
+  {solution: the-sol-1, system: constraint-system(system.variables, constraints, refinement-constraints, field-constraints, example-types, system.next-system)}
 end
 
 fun solve-helper-constraints(system :: ConstraintSystem, solution :: ConstraintSolution, context :: Context) -> FoldResult<{ConstraintSystem; ConstraintSolution}>:
@@ -798,16 +818,24 @@ fun solve-helper-refinements(system :: ConstraintSystem, solution :: ConstraintS
                 {temp-system; temp-variables.add(temp-variable.key())}
               end, {system; empty-tree-set})
             
-            solve-helper-constraints(temp-system, constraint-solution(empty-tree-set, [string-dict: ]), context).bind(lam({shadow temp-system; temp-solution}, shadow context):
+            the-sol-1 = constraint-solution(empty-tree-set, [string-dict: ])
+            spy "solve-helper-refinements #1":
+              the-sol-1
+            end
+            solve-helper-constraints(temp-system, the-sol-1, context).bind(lam({shadow temp-system; temp-solution}, shadow context):
                 cases(ConstraintSolution) temp-solution:
                   | constraint-solution(_, temp-substitutions) =>
                     temp-keys-set = temp-substitutions.keys()
                     shadow temp-keys-set = temp-keys-set.difference(temp-variables)
                     # TODO(MATT): make this more robust
                     if (temp-keys-set.size() > 0): # or not(temp-system.refinement-constraints.length() == refinement-constraints.length()): # some change in refinement constraints
-                      shadow solution = constraint-solution(empty-tree-set, temp-substitutions.fold-keys(lam(key, shadow substitutions):
+                      the-sol-2 = constraint-solution(empty-tree-set, temp-substitutions.fold-keys(lam(key, shadow substitutions):
                             substitutions.set(key, temp-substitutions.get-value(key))
                           end, solution.substitutions))
+                      spy "solve-helper-refinements #2":
+                        the-sol-2
+                      end
+                      shadow solution = the-sol-2
                       solve-helper-refinements(temp-system, solution, context)
                     else:
                       # merge all constraints for each existential variable
@@ -834,7 +862,11 @@ fun solve-helper-refinements(system :: ConstraintSystem, solution :: ConstraintS
                         end, {system: system, solution: solution})
                       new-system = new-system-and-solution.system
                       new-solution = new-system-and-solution.solution
-                      fold-result({constraint-system(variables, empty, empty, new-system.field-constraints, new-system.example-types, next-system); constraint-solution(empty-tree-set, new-solution.substitutions)}, context)
+                      the-sol-3 = constraint-solution(empty-tree-set, new-solution.substitutions)
+                      spy "solve-helper-refinements #3":
+                        the-sol-3
+                      end
+                      fold-result({constraint-system(variables, empty, empty, new-system.field-constraints, new-system.example-types, next-system); the-sol-3}, context)
                     end
                 end
               end)
@@ -941,8 +973,12 @@ fun solve-helper-examples(system :: ConstraintSystem, solution :: ConstraintSolu
                 + "'inferred-type': " + "'" + tostring(new-type) + "'" + ","
                 + "}"
               LOG.log("test-inferred-type", log-payload)
-              
-              fold-result({system; constraint-solution(empty-tree-set, solution.substitutions.set(existential-key, {new-type; existential}))}, context)
+
+              the-sol-1 = constraint-solution(empty-tree-set, solution.substitutions.set(existential-key, {new-type; existential}))
+              spy "solve-helper-examples #1":
+                the-sol-1
+              end
+              fold-result({system; the-sol-1}, context)
             | empty => fold-errors([list: C.unann-failed-test-inference(existential.l)])
           end
         end, example-types.keys-list(), context, {system; solution})
@@ -1223,7 +1259,11 @@ fun maintain-common-structure(struct :: Structure, typ :: Type) -> Type:
   
   maintained = _maintain-structure(typ, empty, [SD.mutable-string-dict: ])
   existentials = maintained.free-variables()
-  temp-solution = constraint-solution(existentials, [string-dict: ])
+  the-sol-1 = constraint-solution(existentials, [string-dict: ])
+  spy "maintain-common-structure #1":
+    the-sol-1
+  end
+  temp-solution = the-sol-1
   temp-solution.generalize(maintained)
 end
 

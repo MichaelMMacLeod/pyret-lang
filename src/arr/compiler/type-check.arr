@@ -2244,7 +2244,11 @@ end
 fun synthesis-instantiation(l :: Loc, expr :: Expr, params :: List<A.Ann>, top-level :: Boolean, context :: Context) -> TypingResult:
   synthesis(expr, top-level, context).bind(lam(new-expr, tmp-type, shadow context):
     shadow tmp-type = if TCS.is-constraint-system(context.constraints):
-      tmp-solution = TCS.constraint-solution(context.constraints.variables, [string-dict: ])
+        the-sol-1 = TCS.constraint-solution(context.constraints.variables, [string-dict: ])
+        spy "synthesis-instantiation #1":
+          the-sol-1
+        end
+      tmp-solution = the-sol-1
       tmp-solution.generalize(tmp-type)
     else:
       tmp-type
