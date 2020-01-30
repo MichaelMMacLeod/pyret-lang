@@ -489,7 +489,7 @@ sharing:
         spy "solve-level #1":
           the-sol-1
         end
-        fold-result({self; the-sol}, context)
+        fold-result({self; the-sol-1}, context)
       | constraint-system(variables, constraints, refinement-constraints, field-constraints, example-types, next-system) =>
         # introduce a half level so any constraints depending on test inference can be solved after test inference
         shadow next-system = next-system.add-level()
@@ -502,7 +502,7 @@ sharing:
         spy "solve-level #2":
           the-sol-2
         end
-        system.solve-level-helper(, context).bind(lam({shadow system; solution}, shadow context):
+        system.solve-level-helper(the-sol-2, context).bind(lam({shadow system; solution}, shadow context):
             # This is solving the level introduced above
             shadow system = system.next-system.add-variable-set(system.variables)
             system.solve-level-helper(solution, context).bind(lam({shadow system; shadow solution}, shadow context):
