@@ -500,7 +500,13 @@ sharing:
         system = constraint-system(variables, constraints, refinement-constraints, field-constraints, example-types, next-system)
         the-sol-2 = constraint-solution(empty-tree-set, [string-dict: ])
         spy "solve-level #2":
-          the-sol-2
+          the-sol-2,
+          variables,
+          constraints,
+          refinement-constraints,
+          field-constraints,
+          example-types,
+          next-system
         end
         system.solve-level-helper(the-sol-2, context).bind(lam({shadow system; solution}, shadow context):
             # This is solving the level introduced above
